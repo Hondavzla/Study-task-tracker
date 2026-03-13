@@ -55,6 +55,15 @@ def index():
     remaining = sum(1 for task in tasks if not task.completed)
     overdue = sum(1 for task in tasks if not task.completed and task.due_date < today_str)
     completed_count = sum(1 for task in tasks if task.completed)
+    task_days = {}
+
+    for task in tasks:
+        try:
+            due = date.fromisoformat(task.due_date)
+            delta = (due - today).days
+            task_days[task.id] = delta
+        except (TypeError, ValueError):
+            task_days[task.id] = None
 
     return render_template(
         "index.html",
@@ -63,6 +72,7 @@ def index():
         remaining=remaining,
         overdue=overdue,
         completed_count=completed_count,
+        task_days=task_days,
     )
 
 

@@ -38,7 +38,18 @@
             </div>
 
             <p class="task-meta">📅 Due {{ task.due_date }}</p>
-            <p class="task-time">Time remaining: due by {{ task.due_date }}</p>
+            {% set days = task_days[task.id] %}
+            {% if days is none %}
+              <p class="task-time">No due date set</p>
+            {% elif days < 0 %}
+              <p class="task-time" style="color: #991b1b">
+                {{ days|abs }} day{{ 's' if days|abs != 1 else '' }} overdue
+              </p>
+            {% elif days == 0 %}
+              <p class="task-time" style="color: #d97706">Due today!</p>
+            {% else %}
+              <p class="task-time">Time remaining: {{ days }} day{{ 's' if days != 1 else '' }}</p>
+            {% endif %}
 
             <div class="status-row">
               <span class="row-label">Status</span>
