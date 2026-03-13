@@ -1,5 +1,5 @@
 # Import Flask for the web app and SQLAlchemy for database ORM support
-from datetime import datetime
+from datetime import date, datetime
 
 from flask import Flask, abort, redirect, render_template, request, url_for
 from flask_sqlalchemy import SQLAlchemy
@@ -49,7 +49,21 @@ class Task(db.Model):
 @app.route("/")
 def index():
     tasks = Task.query.order_by(Task.due_date.asc()).all()
-    return render_template("index.html", tasks=tasks)
+    today = date.today()
+    today_str = str(today)
+
+    remaining = sum(1 for task in tasks if not task.completed)
+    overdue = sum(1 for task in tasks if not task.completed and task.due_date < today_str)
+    completed_count = sum(1 for task in tasks if task.completed)
+
+    return render_template(
+        "index.html",
+        tasks=tasks,
+        today=today,
+        remaining=remaining,
+        overdue=overdue,
+        completed_count=completed_count,
+    )
 
 
 @app.route("/add", methods=["GET", "POST"])

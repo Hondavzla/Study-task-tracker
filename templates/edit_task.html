@@ -3,35 +3,35 @@
 {% block title %}Edit Task{% endblock %}
 
 {% block content %}
-  <h1>Edit Task</h1>
+  <section class="form-wrapper">
+    <div class="form-card">
+      <h1 class="form-title">Edit Task</h1>
 
-  <form method="POST" action="/edit/{{ task.id }}">
-    <!-- Task title field -->
-    <div>
-      <label for="title">Title</label>
-      <input type="text" id="title" name="title" value="{{ task.title }}" required />
+      <form method="POST" action="/edit/{{ task.id }}">
+        <div class="form-group">
+          <label for="title">Title</label>
+          <input type="text" id="title" name="title" value="{{ task.title }}" required />
+        </div>
+
+        <div class="form-group">
+          <label for="course">Course</label>
+          <input type="text" id="course" name="course" value="{{ task.course }}" required />
+        </div>
+
+        <div class="form-group">
+          <label for="due_date">Due Date</label>
+          <input type="date" id="due_date" name="due_date" value="{{ task.due_date }}" required />
+        </div>
+
+        <div class="form-group">
+          <label for="description">Description</label>
+          <textarea id="description" name="description">{{ task.description or "" }}</textarea>
+        </div>
+
+        <button class="form-submit" type="submit">Save Changes</button>
+      </form>
+
+      <a class="cancel-link" href="/">Cancel</a>
     </div>
-
-    <!-- Course name field -->
-    <div>
-      <label for="course">Course</label>
-      <input type="text" id="course" name="course" value="{{ task.course }}" required />
-    </div>
-
-    <!-- Due date field -->
-    <div>
-      <label for="due_date">Due Date</label>
-      <input type="date" id="due_date" name="due_date" value="{{ task.due_date }}" required />
-    </div>
-
-    <!-- Optional description field -->
-    <div>
-      <label for="description">Description</label>
-      <textarea id="description" name="description">{{ task.description or "" }}</textarea>
-    </div>
-
-    <button type="submit">Save Changes</button>
-  </form>
-
-  <p><a href="/">Cancel</a></p>
+  </section>
 {% endblock %}

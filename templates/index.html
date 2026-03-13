@@ -3,43 +3,71 @@
 {% block title %}My Tasks{% endblock %}
 
 {% block content %}
-  <h1>My Tasks</h1>
+  <section class="welcome-banner">
+    <p class="welcome-title">Welcome back! Here are your tasks</p>
+    <div class="stats-row">
+      <span>{{ remaining }} Tasks Remaining</span>
+      <span class="stats-divider">|</span>
+      <span>{{ overdue }} Overdue</span>
+      <span class="stats-divider">|</span>
+      <span>{{ completed_count }} Completed</span>
+    </div>
+  </section>
 
-  <p><a href="/add">Add New Task</a></p>
-
-  {% if tasks %}
-    <table>
-      <thead>
-        <tr>
-          <th>Title</th>
-          <th>Course</th>
-          <th>Due Date</th>
-          <th>Status</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
+  <section class="content-card">
+    {% if tasks %}
+      <div class="tasks-grid">
         {% for task in tasks %}
-          <tr>
-            <td>{{ task.title }}</td>
-            <td>{{ task.course }}</td>
-            <td>{{ task.due_date }}</td>
-            <td>
-              <form method="POST" action="/toggle/{{ task.id }}" style="display:inline">
-                <button type="submit">{% if task.completed %}✓ Done{% else %}Pending{% endif %}</button>
+          {% set course_initial = (task.course[:1] if task.course else "") | upper %}
+          {% if course_initial == "M" %}
+            {% set course_class = "course-m" %}
+          {% elif course_initial == "C" %}
+            {% set course_class = "course-c" %}
+          {% elif course_initial == "H" %}
+            {% set course_class = "course-h" %}
+          {% elif course_initial == "E" %}
+            {% set course_class = "course-e" %}
+          {% else %}
+            {% set course_class = "course-default" %}
+          {% endif %}
+
+          <article class="task-card">
+            <div class="task-top">
+              <h2 class="task-title">{{ task.title }}</h2>
+              <span class="course-badge {{ course_class }}">{{ task.course[:4] | upper }}</span>
+            </div>
+
+            <p class="task-meta">📅 Due {{ task.due_date }}</p>
+            <p class="task-time">Time remaining: due by {{ task.due_date }}</p>
+
+            <div class="status-row">
+              <span class="row-label">Status</span>
+              {% if task.completed %}
+                <span class="status-badge status-done">✓ Done</span>
+              {% elif task.due_date < today|string %}
+                <span class="status-badge status-overdue">Overdue</span>
+              {% else %}
+                <span class="status-badge status-pending">Pending</span>
+              {% endif %}
+            </div>
+
+            <div class="actions-row">
+              <span class="row-label">Actions</span>
+              <a href="/edit/{{ task.id }}">Edit</a>
+              <span class="sep">|</span>
+              <form method="POST" action="/toggle/{{ task.id }}">
+                <button type="submit">Mark Complete</button>
               </form>
-            </td>
-            <td>
-              <a href="/edit/{{ task.id }}">Edit</a> |
-              <form method="POST" action="/delete/{{ task.id }}" style="display:inline">
+              <span class="sep">|</span>
+              <form method="POST" action="/delete/{{ task.id }}">
                 <button type="submit">Delete</button>
               </form>
-            </td>
-          </tr>
+            </div>
+          </article>
         {% endfor %}
-      </tbody>
-    </table>
-  {% else %}
-    <p>No tasks yet. Add your first one!</p>
-  {% endif %}
+      </div>
+    {% else %}
+      <p class="empty-state">No tasks yet. Add your first one!</p>
+    {% endif %}
+  </section>
 {% endblock %}
