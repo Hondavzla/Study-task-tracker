@@ -131,6 +131,25 @@ def delete_task(task_id):
     return redirect(url_for("index"))
 
 
+@app.route("/toggle/<int:task_id>", methods=["POST"])
+def toggle_task(task_id):
+    # Fetch the task by primary key
+    task = db.session.get(Task, task_id)
+
+    # Return 404 if the task does not exist
+    if task is None:
+        abort(404)
+
+    # Toggle completion status (True becomes False, False becomes True)
+    task.completed = not task.completed
+
+    # Commit the transaction to save the updated status
+    db.session.commit()
+
+    # Return to the index page after toggling
+    return redirect(url_for("index"))
+
+
 # Run setup and start the development server when this file is executed directly
 if __name__ == "__main__":
     # Create database tables if they do not already exist
