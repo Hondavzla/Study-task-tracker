@@ -1,7 +1,7 @@
 # Import Flask for the web app and SQLAlchemy for database ORM support
 from datetime import datetime
 
-from flask import Flask, redirect, render_template, request, url_for
+from flask import Flask, abort, redirect, render_template, request, url_for
 from flask_sqlalchemy import SQLAlchemy
 
 # Create the Flask application instance
@@ -77,6 +77,38 @@ def add_task():
     db.session.commit()
 
     # Send the user back to the home page after saving
+    return redirect(url_for("index"))
+
+
+@app.route("/edit/<int:task_id>", methods=["GET", "POST"])
+def edit_task(task_id):
+    # Fetch the task by primary key
+    task = db.session.get(Task, task_id)
+
+    # Return 404 if the task does not exist
+    if task is None:
+        abort(404)
+
+    # Show the edit form pre-filled with current task data
+    if request.method == "GET":
+        return render_template("edit_task.html", task=task)
+
+    # Read submitted form values safely
+    title = request.form.get("title")
+    course = request.form.get("course")
+    due_date = request.form.get("due_date")
+    description = request.form.get("description")
+
+    # Update fields on the existing task object
+    task.title = title
+    task.course = course
+    task.due_date = due_date
+    task.description = description
+
+    # Commit changes to save updates
+    db.session.commit()
+
+    # Return to the index page after saving
     return redirect(url_for("index"))
 
 

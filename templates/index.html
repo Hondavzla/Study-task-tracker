@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}My Tasks{% endblock %}
+
+{% block content %}
+  <h1>My Tasks</h1>
+
+  <p><a href="/add">Add New Task</a></p>
+
+  {% if tasks %}
+    <table>
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th>Course</th>
+          <th>Due Date</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for task in tasks %}
+          <tr>
+            <td>{{ task.title }}</td>
+            <td>{{ task.course }}</td>
+            <td>{{ task.due_date }}</td>
+            <td>{% if task.completed %}Done{% else %}Pending{% endif %}</td>
+            <td><a href="/edit/{{ task.id }}">Edit</a> | Delete</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>No tasks yet. Add your first one!</p>
+  {% endif %}
+{% endblock %}
