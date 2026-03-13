@@ -25,7 +25,12 @@
             <td>{{ task.course }}</td>
             <td>{{ task.due_date }}</td>
             <td>{% if task.completed %}Done{% else %}Pending{% endif %}</td>
-            <td><a href="/edit/{{ task.id }}">Edit</a> | Delete</td>
+            <td>
+              <a href="/edit/{{ task.id }}">Edit</a> |
+              <form method="POST" action="/delete/{{ task.id }}" style="display:inline">
+                <button type="submit">Delete</button>
+              </form>
+            </td>
           </tr>
         {% endfor %}
       </tbody>

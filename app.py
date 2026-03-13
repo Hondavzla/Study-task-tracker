@@ -112,6 +112,25 @@ def edit_task(task_id):
     return redirect(url_for("index"))
 
 
+@app.route("/delete/<int:task_id>", methods=["POST"])
+def delete_task(task_id):
+    # Fetch the task by primary key
+    task = db.session.get(Task, task_id)
+
+    # Return 404 if the task does not exist
+    if task is None:
+        abort(404)
+
+    # Delete the task from the database session
+    db.session.delete(task)
+
+    # Commit the transaction to save changes
+    db.session.commit()
+
+    # Return to the index page after deleting
+    return redirect(url_for("index"))
+
+
 # Run setup and start the development server when this file is executed directly
 if __name__ == "__main__":
     # Create database tables if they do not already exist
