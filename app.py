@@ -1,7 +1,7 @@
 # Import Flask for the web app and SQLAlchemy for database ORM support
 from datetime import datetime
 
-from flask import Flask
+from flask import Flask, redirect, render_template, request, url_for
 from flask_sqlalchemy import SQLAlchemy
 
 # Create the Flask application instance
@@ -43,6 +43,41 @@ class Task(db.Model):
     # Helpful string representation when printing task objects
     def __repr__(self):
         return f"<Task '{self.title}'>"
+
+
+# Home page route: show all tasks ordered by due date (earliest first)
+@app.route("/")
+def index():
+    tasks = Task.query.order_by(Task.due_date.asc()).all()
+    return render_template("index.html", tasks=tasks)
+
+
+@app.route("/add", methods=["GET", "POST"])
+def add_task():
+    # Show the empty add-task form when the user visits the page
+    if request.method == "GET":
+        return render_template("add_task.html")
+
+    # Read submitted form values safely (returns None if a key is missing)
+    title = request.form.get("title")
+    course = request.form.get("course")
+    due_date = request.form.get("due_date")
+    description = request.form.get("description")
+
+    # Create a new Task object (completed defaults to False in the model)
+    new_task = Task(
+        title=title,
+        course=course,
+        due_date=due_date,
+        description=description,
+    )
+
+    # Save the new task to the database
+    db.session.add(new_task)
+    db.session.commit()
+
+    # Send the user back to the home page after saving
+    return redirect(url_for("index"))
 
 
 # Run setup and start the development server when this file is executed directly
