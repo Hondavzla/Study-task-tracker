@@ -404,3 +404,36 @@ main {
     width: 100%;
   }
 }
+
+.chevron-btn {
+  background: none;
+  border: none;
+  font-size: 1rem;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 0;
+  transition: transform 0.25s ease;
+  line-height: 1;
+}
+
+.chevron-btn.open {
+  transform: rotate(180deg);
+}
+
+.task-desc-panel {
+  display: none;
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid #f3f4f6;
+}
+
+.task-desc-panel.open {
+  display: block;
+}
+
+.task-desc-text {
+  margin: 0;
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  line-height: 1.55;
+}

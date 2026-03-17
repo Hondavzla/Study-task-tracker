@@ -34,7 +34,19 @@
           <article class="task-card">
             <div class="task-top">
               <h2 class="task-title">{{ task.title }}</h2>
-              <span class="course-badge {{ course_class }}">{{ task.course[:4] | upper }}</span>
+              <div>
+                <span class="course-badge {{ course_class }}">{{ task.course[:4] | upper }}</span>
+                {% if task.description %}
+                  <button
+                    type="button"
+                    class="chevron-btn"
+                    aria-expanded="false"
+                    data-target="desc-{{ task.id }}"
+                  >
+                    ▾
+                  </button>
+                {% endif %}
+              </div>
             </div>
 
             <p class="task-meta">📅 Due {{ task.due_date }}</p>
@@ -74,6 +86,12 @@
                 <button type="submit">Delete</button>
               </form>
             </div>
+
+            {% if task.description %}
+              <div id="desc-{{ task.id }}" class="task-desc-panel">
+                <p class="task-desc-text">{{ task.description }}</p>
+              </div>
+            {% endif %}
           </article>
         {% endfor %}
       </div>
