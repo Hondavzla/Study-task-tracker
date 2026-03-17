@@ -174,11 +174,10 @@ def toggle_task(task_id):
     return redirect(url_for("index"))
 
 
-# Run setup and start the development server when this file is executed directly
-if __name__ == "__main__":
-    # Create database tables if they do not already exist
-    with app.app_context():
-        db.create_all()
+# This runs on every startup including on Render via gunicorn
+with app.app_context():
+    db.create_all()
 
-    # Start Flask's built-in development server
+if __name__ == "__main__":
     app.run(debug=True)
+
