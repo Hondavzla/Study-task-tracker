@@ -2,7 +2,7 @@
 A full-stack web app for students to manage coursework tasks, due dates, and completion status in one place.
 
 ## Live Demo 🚀
-[Live Demo](https://your-app-url.onrender.com)
+https://study-task-tracker-17mz.onrender.com
 
 ## Screenshots 🖼️
 (screenshots coming soon)
